@@ -3,8 +3,6 @@
 
 FROM redhat/ubi10:latest
 
-ARG http_proxy_env
-ARG https_proxy_env
 ARG DGPU_LTS_OS_SUPPORT="10.0"
 
 # repository to install Intel(R) oneAPI Libraries
@@ -18,14 +16,9 @@ repo_gpgcheck=1
 gpgkey=https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 EOF
 
-RUN cat <<EOF >> /etc/dnf/dnf.conf
-metadata_timer_sync=0
-proxy=${https_proxy_env}
-EOF
-
 # repository to install Intel(R) GPU drivers
 RUN VERSION_ID=$(. /etc/os-release ; echo -n $VERSION_ID) && echo VERSION_ID=${VERSION_ID}; echo '' && \
-    https_proxy=${https_proxy_env} rpm --import https://repositories.intel.com/gpu/intel-graphics.key && \
+    rpm --import https://repositories.intel.com/gpu/intel-graphics.key && \
     dnf install -y 'dnf-command(config-manager)' && \
     dnf config-manager --add-repo https://repositories.intel.com/gpu/rhel/${DGPU_LTS_OS_SUPPORT}/lts/2523/unified/intel-gpu-${DGPU_LTS_OS_SUPPORT}.repo &&  \
     dnf repolist; dnf makecache -y
