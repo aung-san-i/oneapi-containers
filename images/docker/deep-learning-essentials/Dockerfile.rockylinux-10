@@ -1,7 +1,7 @@
 # Copyright (c) 2020-2026 Intel Corporation.
 # SPDX-License-Identifier: BSD-3-Clause
 
-FROM rockylinux:10
+FROM rockylinux/rockylinux:10
 # repository to install Intel(R) oneAPI Libraries
 RUN tee /etc/yum.repos.d/oneAPI.repo <<'EOF'
 [oneAPI]
